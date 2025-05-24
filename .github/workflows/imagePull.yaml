@@ -32,7 +32,7 @@ jobs:
       - name: Pull Kong Gateway ARM64 image
         run: |
           echo "Pulling Kong Gateway ARM64 image..."
-          docker pull --platform linux/arm64 kong/kong-gateway:${{ env.KONG_VERSION }}
+          docker pull --platform linux/arm64 kong:${{ env.KONG_VERSION }}
       
       - name: Tag and push to GHCR
         run: |
