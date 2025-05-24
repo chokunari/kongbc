@@ -15,7 +15,7 @@ jobs:
     
     env:
       REGISTRY: ghcr.io
-      IMAGE_NAME: ${{ github.repository }}/kong-gateway
+      IMAGE_NAME: ${{ github.repository }}/kong
       KONG_VERSION: "3.9.0"
     
     steps:
@@ -37,8 +37,8 @@ jobs:
       - name: Tag and push to GHCR
         run: |
           echo "Tagging image for GHCR..."
-          docker tag kong/kong-gateway:${{ env.KONG_VERSION }} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.KONG_VERSION }}
-          docker tag kong/kong-gateway:${{ env.KONG_VERSION }} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          docker tag kong:${{ env.KONG_VERSION }} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.KONG_VERSION }}
+          docker tag kong:${{ env.KONG_VERSION }} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
           
           echo "Pushing to GHCR..."
           docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.KONG_VERSION }}
