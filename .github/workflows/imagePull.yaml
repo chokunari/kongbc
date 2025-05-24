@@ -7,7 +7,7 @@ on:
 
 jobs:
   security-scan:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     
     permissions:
       contents: read
@@ -21,23 +21,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      
-      - name: Set up Docker
-        run: |
-          echo "Installing Docker..."
-          # Homebrewを使用してDockerをインストール
-          brew install --cask docker
-          
-          # Dockerデーモンを起動
-          sudo /Applications/Docker.app/Contents/MacOS/Docker --unattended &
-          
-          # Dockerが起動するまで待機
-          echo "Waiting for Docker to start..."
-          while ! docker info >/dev/null 2>&1; do
-            echo "Docker is not ready yet, waiting..."
-            sleep 5
-          done
-          echo "Docker is ready!"
       
       - name: Log in to Container Registry
         uses: docker/login-action@v3
@@ -64,7 +47,12 @@ jobs:
       - name: Install Trivy
         run: |
           echo "Installing Trivy..."
-          brew install trivy
+          sudo apt-get update
+          sudo apt-get install wget apt-transport-https gnupg lsb-release -y
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+          echo "deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+          sudo apt-get update
+          sudo apt-get install trivy -y
       
       - name: Run Trivy vulnerability scan
         id: trivy-scan
